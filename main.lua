@@ -4,13 +4,23 @@ Class = require "class"
 WINDOW_WIDTH = 1280
 WINDOW_HEIGHT = 720
 
-VIRTUAL_WIDTH = 512
-VIRTUAL_HEIGHT = 288
+VIRTUAL_WIDTH = 534
+VIRTUAL_HEIGHT =  300
 
---background image
+--background and ground images
 local background = love.graphics.newImage('/assets/background.png')
 local ground = love.graphics.newImage('/assets/ground.png')
 
+-- Scroll offset
+local backgroundScroll = 0
+local groundScroll = 0
+
+-- Scroll speeds
+local BACKGROUND_SCROLL_SPEED = 30
+local GROUND_SCROLL_SPEED = 70
+
+local BACKGROUND_LOOPING_POINT = 300
+local GROUND_LOOPING_POINT = 43
 
 function love.load(arg)
     love.graphics.setDefaultFilter('nearest', 'nearest')
@@ -23,7 +33,7 @@ function love.load(arg)
     })
 end
 
-function function love.resize(w, h)
+function love.resize(w, h)
     push:resize(w, h)
 end
 
@@ -37,14 +47,20 @@ function love.keypressed(key, scancode, isrepeat)
 end
 
 function love.update(dt)
-    -- body...
+    backgroundScroll = (backgroundScroll + BACKGROUND_SCROLL_SPEED * dt)
+        % BACKGROUND_LOOPING_POINT
+
+    groundScroll = (groundScroll + GROUND_SCROLL_SPEED * dt)
+        % GROUND_LOOPING_POINT
 end
 
 function love.draw()
     push:start()
 
-    love.graphics.draw(background, 0, 0)
-    love.graphics.draw(ground, 0, VIRTUAL_HEIGHT - 16)
+    -- Draw background
+    love.graphics.draw(background, -backgroundScroll, -200)
+    -- Draw ground
+    love.graphics.draw(ground, -groundScroll-1, VIRTUAL_HEIGHT - 20)
 
     push:finish()
 end
