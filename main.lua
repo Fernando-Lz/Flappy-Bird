@@ -27,6 +27,7 @@ local GROUND_LOOPING_POINT = 43
 
 local bird = Bird()
 
+
 function love.load(arg)
     love.graphics.setDefaultFilter('nearest', 'nearest')
     love.window.setTitle("Flappy Bird!")
@@ -36,28 +37,49 @@ function love.load(arg)
         fullscreen = false,
         resizable = true  
     })
+
+    -- Table of keys pressed  is defined to be used outside main.lua
+    love.keyboard.keysPressed = {}
 end
+
 
 function love.resize(w, h)
     push:resize(w, h)
 end
 
-function love.keypressed(key, scancode, isrepeat)
+
+function love.keypressed(key)
+    love.keyboard.keysPressed[key] =  true
     -- escape
     if key == 'escape' then
         love.event.quit()
     end
 
-
 end
+
+
+function love.keyboard.wasPressed(key)
+    if love.keyboard.keysPressed[key] then
+        return true
+    else
+        return false
+    end
+end
+
 
 function love.update(dt)
+    -- Scroll background
     backgroundScroll = (backgroundScroll + BACKGROUND_SCROLL_SPEED * dt)
         % BACKGROUND_LOOPING_POINT
-
+    -- Scroll ground
     groundScroll = (groundScroll + GROUND_SCROLL_SPEED * dt)
         % GROUND_LOOPING_POINT
+
+    bird:update(dt)
+
+    love.keyboard.keysPressed = {}
 end
+
 
 function love.draw()
     push:start()
