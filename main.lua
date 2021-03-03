@@ -1,5 +1,4 @@
 -- TODO
--- #1 update bird images to create the motion of flutter (dt/3) por las tres fases de aleteo
 -- #2 be able to change bird color
 
 -- Assets obtained from https://github.com/samuelcust/flappy-bird-assets
@@ -193,6 +192,9 @@ function love.draw()
 	    for k, pair in pairs(pipePairs) do
 	        pair:render()
 	    end
+
+        -- Draw ground
+	    love.graphics.draw(ground, -groundScroll-1, VIRTUAL_HEIGHT - 20)
 	end        
 
     push:finish()
