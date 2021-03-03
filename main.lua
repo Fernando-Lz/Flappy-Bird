@@ -25,12 +25,12 @@ local backgroundScroll = 0
 local groundScroll = 0
 
 -- Scroll speeds
-local BACKGROUND_SCROLL_SPEED = 30
+local BACKGROUND_SCROLL_SPEED = 50
 local GROUND_SCROLL_SPEED = 70
 
 -- Looping Points
-local BACKGROUND_LOOPING_POINT = 300
-local GROUND_LOOPING_POINT = 43
+local BACKGROUND_LOOPING_POINT = 753
+local GROUND_LOOPING_POINT = 120
 
 -- Classes instantiation
 local bird = Bird()
@@ -260,8 +260,8 @@ function love.draw()
 
 	if gameState == 'gameOver' then
 
-		--love.graphics.rotate(math.pi/2)
-		--bird:render()
+		love.graphics.rotate(math.pi/2)
+		bird:render()
 	end     
 
     push:finish()
