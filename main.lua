@@ -182,8 +182,8 @@ function love.draw()
     end
     -- Draw ground
     love.graphics.draw(ground, -groundScroll-1, VIRTUAL_HEIGHT - 20)
-    -- Draw Bird
-    bird:render(dt)
-
+    -- Draw Bird 
+    bird:render()
+        
     push:finish()
 end
