@@ -92,6 +92,8 @@ function love.keypressed(key)
     elseif key == 'enter' or key == 'return' then
 
     	if gameState == 'start' then
+    		bird:init()
+    		spawnTimer = 0
     		gameState = 'play'    	
 
     	elseif gameState == 'gameOver' then
@@ -193,6 +195,9 @@ function love.draw()
 	    for k, pair in pairs(pipePairs) do
 	        pair:render()
 	    end
+
+	    -- Draw ground
+	    love.graphics.draw(ground, -groundScroll-1, VIRTUAL_HEIGHT - 20)
 	end        
 
     push:finish()
