@@ -105,6 +105,10 @@ function love.keypressed(key)
     		gameState = 'play'    	
 
     	elseif gameState == 'gameOver' then
+    		
+    		-- Reset score 
+            score = 0
+
     		gameState = 'leaderboard'
     	
     	-- Respawn
@@ -187,6 +191,7 @@ function love.update(dt)
 
                     love.audio.play(hit)
                     love.audio.play(death)
+                    
                     gameState = 'gameOver'
                 end
             end
@@ -246,8 +251,7 @@ function love.draw()
         end
 	end
 
-	if gameState == 'play' or gameState == 'gameOver' then
-	    love.graphics.print(score, VIRTUAL_WIDTH/2, VIRTUAL_HEIGHT/4)
+	if gameState == 'play' or gameState == 'gameOver' then	    	
 
 	    -- Draw pipes
 	    for k, pair in pairs(pipePairs) do
@@ -256,6 +260,12 @@ function love.draw()
 
         -- Draw ground
 	    love.graphics.draw(ground, -groundScroll-1, VIRTUAL_HEIGHT - 20)
+
+	    -- Draw Bird front of the pipes
+	    bird:render()
+
+	    love.graphics.setColor(0,0,0,1)
+	    love.graphics.print(score, VIRTUAL_WIDTH/2, VIRTUAL_HEIGHT/4)
 	end
 
 	if gameState == 'gameOver' then
