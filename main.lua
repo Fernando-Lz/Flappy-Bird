@@ -42,6 +42,10 @@ local spawnTimer = 0
 -- Variable to keep continuity on the pipes path for the bird
 local lastY = -PIPE_HEIGHT + math.random(80) + 20
 
+local score = 0
+local bestScore = 0
+
+local point = love.audio.newSource('/assets/audio/point.wav', 'stream')
 -- Variable that changes when the bird collides with a pipe
 --local aliveBird = true
 
@@ -154,10 +158,25 @@ function love.update(dt)
         for k, pair in pairs(pipePairs) do
             pair:update(dt)
 
+            -- update score
+            if pair.checked == false then
+
+	            if bird.x > pair.x then
+	            	score = score + 1
+	            	love.audio.play(point)
+	            	pair.checked = true
+	            end
+        	end
+
             --checks collision
             for i, pipe in pairs(pair.pipes) do
                 if bird:collides(pipe) then
-                    --aliveBird = false
+                    
+                    -- check if new best score
+                    if score > bestScore then
+                    	bestScore = score
+                    end
+
                     gameState = 'gameOver'
                 end
             end
@@ -196,6 +215,8 @@ function love.draw()
 	end
 
 	if gameState == 'play' or gameState == 'gameOver' then
+	    love.graphics.print(score, VIRTUAL_WIDTH/2, VIRTUAL_HEIGHT/4)
+
 	    -- Draw pipes
 	    for k, pair in pairs(pipePairs) do
 	        pair:render()
