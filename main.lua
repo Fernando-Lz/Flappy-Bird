@@ -46,6 +46,8 @@ local lastY = -PIPE_HEIGHT + math.random(80) + 20
 -- Variable that changes when the bird collides with a pipe
 local aliveBird = true
 
+gameState = 'start'
+
 function love.load(arg)
     love.graphics.setDefaultFilter('nearest', 'nearest')
     love.window.setTitle("Flappy Bird!")
@@ -83,9 +85,23 @@ function love.keypressed(key)
     love.keyboard.keysPressed[key] =  true
     -- escape
     if key == 'escape' then
+        
         love.event.quit()
-    end
 
+    -- Change states when the return key is pressed
+    elseif key == 'enter' or key == 'return' then
+
+    	if gameState == 'main' then
+    		gameState = 'play'    	
+
+    	elseif gameState == 'gameOver' then
+    		gameState = 'leaderboard'
+    	
+    	elseif gammeState == 'leaderboard' then
+    		gameState = 'start'
+    	
+
+    end
 end
 
 
