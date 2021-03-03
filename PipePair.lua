@@ -12,11 +12,8 @@ PipePair = Class{}
 
 -- size of the gap between pipes
 -- Can be changed for different difficulties
-local GAP_HEIGHT = 80
+local GAP_HEIGHT = 60
 
--- For difficulties
-local GAP_HEIGHT_MIN = 75
-local GAP_HEIGHT_MAX = 100
 
 function PipePair:init(y)
     -- initialize pipes past the end of the screen
@@ -24,6 +21,13 @@ function PipePair:init(y)
 
     -- y value is for the topmost pipe; gap is a vertical shift of the second lower pipe
     self.y = y
+
+    -- Each 5 points reduces the GAP_HEIGHT by 3
+    if score % 5 == 0 and score > 0 then
+        if GAP_HEIGHT > 60 then
+            GAP_HEIGHT = GAP_HEIGHT - 3
+        end
+    end
 
     -- instantiate two pipes that belong to this pair
     self.pipes = {
@@ -47,6 +51,7 @@ function PipePair:update(dt)
     else
         self.remove = true
     end
+
 end
 
 function PipePair:render()

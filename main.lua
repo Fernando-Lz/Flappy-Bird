@@ -43,7 +43,7 @@ local spawnTimer = 0
 -- Variable to keep continuity on the pipes path for the bird
 local lastY = -PIPE_HEIGHT + math.random(80) + 20
 
-local score = 0
+score = 0
 local bestScore = 0
 
 local point = love.audio.newSource('/assets/audio/point.wav', 'stream')
