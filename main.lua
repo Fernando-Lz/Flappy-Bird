@@ -104,17 +104,17 @@ function love.keypressed(key)
     	if gameState == 'start' then
     		gameState = 'play'    	
 
-    	elseif gameState == 'gameOver' then
-    		
-    		-- Reset score 
-            score = 0
+    	elseif gameState == 'gameOver' then    		    	
 
     		gameState = 'leaderboard'
     	
-    	-- Respawn
+    	-- Respawn Bird
     	elseif gameState == 'leaderboard' then
 
     		bird:init()
+
+    		-- Reset score 
+            score = 0
 
     		for k in pairs(pipePairs) do
 			    pipePairs[k] = nil
@@ -232,7 +232,7 @@ function love.draw()
     push:start()
     --Simulate a draw layer by setting an order in which objects will be drawn
     
-    if gameState == 'start' or gameState == 'play' or gameState == 'gameOver' then
+    if --[[gameState == 'start' or gameState == 'play' or gameState == 'gameOver']] gameState ~= 'leaderboard' then
 	    -- Draw background
 	    love.graphics.draw(background, -backgroundScroll, -200)
 	    
@@ -268,10 +268,12 @@ function love.draw()
 	    love.graphics.print(score, VIRTUAL_WIDTH/2, VIRTUAL_HEIGHT/4)
 	end
 
-	if gameState == 'gameOver' then
+	if gameState == 'leaderboard' then
 
 		--love.graphics.rotate(math.pi/2)
 		--bird:render()
+		love.graphics.print('Score: ' ..score, VIRTUAL_WIDTH/2, VIRTUAL_HEIGHT/4)
+		love.graphics.print('Highscore: ' ..bestScore, VIRTUAL_WIDTH/2, VIRTUAL_HEIGHT/4 + 45)
 	end     
 
     push:finish()
