@@ -97,6 +97,12 @@ function love.keypressed(key)
     		gameState = 'leaderboard'
     	
     	elseif gameState == 'leaderboard' then
+    		bird:init()
+
+    		for k in pairs (pipePairs) do
+			    pipePairs[k] = nil
+			end
+
     		gameState = 'start'
     	end
     	
@@ -121,7 +127,6 @@ function love.update(dt)
 
         -- Update of spawnTimer
         spawnTimer = spawnTimer + dt
-
         -- How often a pipe is generated, is updated each two and half second
         if spawnTimer > 2 then
             --Can be changed for dificulties
@@ -139,7 +144,8 @@ function love.update(dt)
         
         -- Ground collision
         if bird.y >= VIRTUAL_HEIGHT - 45 then
-            aliveBird = false
+            --aliveBird = false
+            gameState = 'gameOver'
         end
         
         --  for each pipe pair
