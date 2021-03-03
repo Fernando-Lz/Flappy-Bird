@@ -2,7 +2,7 @@ Bird = Class{}
 
 -- Multiples gravitys can be defined to set difficulty levels
 local GRAVITY = 10
-
+local renderTimer = 0
 function Bird:init()
     -- Load image
     self.image = love.graphics.newImage('/assets/yellowbird-downflap.png')
@@ -19,6 +19,20 @@ end
 
 function Bird:render()
     love.graphics.draw(self.image, self.x, self.y)
+end
+
+function Bird:collides(pipe)
+    -- Shifts the hit box of the bird to give more opportunities to the user
+    -- X axis hitbox
+    -- left        right
+    if (self.x + 3) + (self.witdh - 8) >= pipe.x and self.x + 3 <= pipe.x + PIPE_WIDTH - 15 then
+        -- top         bottom
+        if (self.y + 5) + (self.height - 2) >= pipe.y and self.y + 5 <= pipe.y + PIPE_HEIGHT then
+            return true
+        end
+    end
+
+    return false
 end
 
 function Bird:update(dt)

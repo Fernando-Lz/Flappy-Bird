@@ -8,6 +8,7 @@ Class = require "class"
 
 require 'Bird'
 require 'Pipe'
+require 'PipePair'
 
 WINDOW_WIDTH = 1280
 WINDOW_HEIGHT = 720
@@ -33,10 +34,17 @@ local GROUND_LOOPING_POINT = 43
 
 -- Classes instantiation
 local bird = Bird()
-local pipes = {}
+-- Table of spawning pipes
+local pipePairs = {}
 
+-- spawnTimer variable, in seconds
 local spawnTimer = 0
 
+-- Variable to keep continuity on the pipes path for the bird
+local lastY = -PIPE_HEIGHT + math.random(80) + 20
+
+-- Variable that changes when the bird collides with a pipe
+local aliveBird = true
 
 function love.load(arg)
     love.graphics.setDefaultFilter('nearest', 'nearest')
@@ -61,6 +69,15 @@ function love.resize(w, h)
     push:resize(w, h)
 end
 
+function love.keyboard.wasPressed(key)
+    if love.keyboard.keysPressed[key] then
+        return true
+    else
+        return false
+    end
+end
+
+
 
 function love.keypressed(key)
     love.keyboard.keysPressed[key] =  true
@@ -72,43 +89,57 @@ function love.keypressed(key)
 end
 
 
-function love.keyboard.wasPressed(key)
-    if love.keyboard.keysPressed[key] then
-        return true
-    else
-        return false
-    end
-end
-
-
 function love.update(dt)
-    -- Scroll background
-    backgroundScroll = (backgroundScroll + BACKGROUND_SCROLL_SPEED * dt)
-        % BACKGROUND_LOOPING_POINT
-    -- Scroll ground
-    groundScroll = (groundScroll + GROUND_SCROLL_SPEED * dt)
-        % GROUND_LOOPING_POINT
+    if aliveBird then
+        -- Scroll background
+        backgroundScroll = (backgroundScroll + BACKGROUND_SCROLL_SPEED * dt)
+            % BACKGROUND_LOOPING_POINT
+        -- Scroll ground
+        groundScroll = (groundScroll + GROUND_SCROLL_SPEED * dt)
+            % GROUND_LOOPING_POINT
 
-    -- Update of spawnTimer
-    spawnTimer = spawnTimer + dt
+        -- Update of spawnTimer
+        spawnTimer = spawnTimer + dt
 
-    -- How often a pipe is generated, is updated each two and half second
-    if spawnTimer > 1.5 then
-        table.insert(pipes, Pipe())
-        spawnTimer = 0
-    end
+        -- How often a pipe is generated, is updated each two and half second
+        if spawnTimer > 2 then
+            --Can be changed for dificulties
+            -- Sets the new pipes, no higher than 10 pixels below the top of the screen and no loweer than 90 pixels from the bottom
+            -- Within the math random are the values of the shift of the next pipes, how high or low will be respect the previous one,
+            local y = math.max(-PIPE_HEIGHT + 10, math.min(lastY + math.random(-40, 40), VIRTUAL_HEIGHT - 90 - PIPE_HEIGHT))
+            lastY = y
 
-    bird:update(dt)
+            table.insert(pipePairs, PipePair(y))
+            -- Reset spawnTimer
+            spawnTimer = 0
+        end
 
-    for k, pipe in pairs(pipes) do
-        pipe:update(dt)
-    
-        -- Makes the pipe disapear once traversed all the screen
-        if pipe.x < -pipe.witdh then
-            table.remove(pipes, k)
+        bird:update(dt)
+
+        --  for each pipe pair
+        for k, pair in pairs(pipePairs) do
+            pair:update(dt)
+
+            --checks collision
+            for i, pipe in pairs(pair.pipes) do
+                if bird:collides(pipe) then
+                    aliveBird = false
+                end
+            end
+            
+            -- Removes the pipe one it is not visible
+            if pair.x < -PIPE_WIDTH then
+                pair.remove = true
+            end
+        end
+
+        for k, pair in pairs(pipePairs) do    
+            -- Makes the pipe disapear once traversed all the screen
+            if pair.remove then
+                table.remove(pipePairs, k)
+            end
         end
     end
-
     love.keyboard.keysPressed = {}
 end
 
@@ -119,13 +150,13 @@ function love.draw()
     -- Draw background
     love.graphics.draw(background, -backgroundScroll, -200)
     -- Draw pipes
-    for k, pipe in pairs(pipes) do
-        pipe:render()
+    for k, pair in pairs(pipePairs) do
+        pair:render()
     end
     -- Draw ground
     love.graphics.draw(ground, -groundScroll-1, VIRTUAL_HEIGHT - 20)
     -- Draw Bird
-    bird:render()
+    bird:render(dt)
 
     push:finish()
 end
