@@ -13,10 +13,24 @@ local desiredDelay = 0.3
 local timePassedSinceLastFrame = 0
 
 function Bird:init()
+    math.randomseed(os.time())
     -- Load image
-    birdImage = love.graphics.newImage('/assets/birdstages.png')
-    for frame = 1, totalNumberofFrames do
-        birdFrames[frame] = love.graphics.newQuad((frame - 1) * BIRD_WITDH, 0, BIRD_WITDH, BIRD_HEIGHT, birdImage:getDimensions())
+    selection = math.random(1, 3)
+    if selection == 1 then
+        birdImage = love.graphics.newImage('/assets/birdstages.png')
+        for frame = 1, totalNumberofFrames do
+            birdFrames[frame] = love.graphics.newQuad((frame - 1) * BIRD_WITDH, 0, BIRD_WITDH, BIRD_HEIGHT, birdImage:getDimensions())
+        end
+    elseif selection == 2 then
+        birdImage = love.graphics.newImage('/assets/birdstages2.png')
+        for frame = 1, totalNumberofFrames do
+            birdFrames[frame] = love.graphics.newQuad((frame - 1) * BIRD_WITDH, 0, BIRD_WITDH, BIRD_HEIGHT, birdImage:getDimensions())
+        end
+    else
+        birdImage = love.graphics.newImage('/assets/birdstages3.png')
+        for frame = 1, totalNumberofFrames do
+            birdFrames[frame] = love.graphics.newQuad((frame - 1) * BIRD_WITDH, 0, BIRD_WITDH, BIRD_HEIGHT, birdImage:getDimensions())
+        end
     end
     self.witdh = WITDH
     self.height = HEIGHT
