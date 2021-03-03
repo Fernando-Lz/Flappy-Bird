@@ -193,7 +193,7 @@ function love.draw()
 	    for k, pair in pairs(pipePairs) do
 	        pair:render()
 	    end
-	end
+	end        
 
     push:finish()
 end

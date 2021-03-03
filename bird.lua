@@ -2,32 +2,44 @@ Bird = Class{}
 
 -- Multiples gravitys can be defined to set difficulty levels
 local GRAVITY = 10
-local renderTimer = 0
+local BIRD_WITDH = 34
+local BIRD_HEIGHT = 24
+local birdImage
+local birdFrames = {}
+local totalNumberofFrames = 3
+
+local currentFrame = 1
+local desiredDelay = 0.3
+local timePassedSinceLastFrame = 0
+
 function Bird:init()
     -- Load image
-    self.image = love.graphics.newImage('/assets/yellowbird-downflap.png')
-    self.witdh = self.image:getWidth()
-    self.height = self.image:getHeight()
+    birdImage = love.graphics.newImage('/assets/birdstages.png')
+    for frame = 1, totalNumberofFrames do
+        birdFrames[frame] = love.graphics.newQuad((frame - 1) * BIRD_WITDH, 0, BIRD_WITDH, BIRD_HEIGHT, birdImage:getDimensions())
+    end
+    self.witdh = WITDH
+    self.height = HEIGHT
 
     -- Displays bird in the middle of the screen
-    self.x = VIRTUAL_WIDTH / 2 - (self.witdh / 2)
-    self.y = VIRTUAL_HEIGHT / 2 - (self.height / 2)
+    self.x = VIRTUAL_WIDTH / 2 - (BIRD_WITDH / 2)
+    self.y = VIRTUAL_HEIGHT / 2 - (BIRD_HEIGHT / 2)
 
     -- y-axis velocity
     self.dy = 0
 end
 
 function Bird:render()
-    love.graphics.draw(self.image, self.x, self.y)
+    love.graphics.draw(birdImage, birdFrames[currentFrame], self.x, self.y)
 end
 
 function Bird:collides(pipe)
     -- Shifts the hit box of the bird to give more opportunities to the user
     -- X axis hitbox
     -- left        right
-    if (self.x + 3) + (self.witdh - 8) >= pipe.x and self.x + 3 <= pipe.x + PIPE_WIDTH - 15 then
+    if (self.x + 3) + (BIRD_WITDH - 8) >= pipe.x and self.x + 3 <= pipe.x + PIPE_WIDTH - 15 then
         -- top         bottom
-        if (self.y + 5) + (self.height - 2) >= pipe.y and self.y + 5 <= pipe.y + PIPE_HEIGHT then
+        if (self.y + 2) + (BIRD_HEIGHT - 2) >= pipe.y and self.y + 2 <= pipe.y + PIPE_HEIGHT then
             return true
         end
     end
@@ -36,6 +48,13 @@ function Bird:collides(pipe)
 end
 
 function Bird:update(dt)
+    -- Bird Image Update
+    timePassedSinceLastFrame = timePassedSinceLastFrame + dt
+    if timePassedSinceLastFrame > desiredDelay then
+        timePassedSinceLastFrame = timePassedSinceLastFrame - desiredDelay
+        currentFrame = currentFrame % totalNumberofFrames + 1
+    end
+
     -- Only changes y-axis velocity
     self.dy = self.dy + GRAVITY * dt
     
