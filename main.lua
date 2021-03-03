@@ -115,7 +115,11 @@ function love.update(dt)
         end
 
         bird:update(dt)
-
+        
+        -- Ground collision
+        if bird.y >= VIRTUAL_HEIGHT - 45 then
+            aliveBird = false
+        end
         --  for each pipe pair
         for k, pair in pairs(pipePairs) do
             pair:update(dt)
