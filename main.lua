@@ -44,7 +44,7 @@ local spawnTimer = 0
 local lastY = -PIPE_HEIGHT + math.random(80) + 20
 
 -- Variable that changes when the bird collides with a pipe
-local aliveBird = true
+--local aliveBird = true
 
 gameState = 'start'
 
@@ -97,7 +97,7 @@ function love.keypressed(key)
     	elseif gameState == 'gameOver' then
     		gameState = 'leaderboard'
     	
-    	elseif gammeState == 'leaderboard' then
+    	elseif gameState == 'leaderboard' then
     		gameState = 'start'
     	
     end
@@ -144,7 +144,8 @@ function love.update(dt)
             --checks collision
             for i, pipe in pairs(pair.pipes) do
                 if bird:collides(pipe) then
-                    aliveBird = false
+                    --aliveBird = false
+                    gameState = 'gameOver'
                 end
             end
             
