@@ -12,7 +12,7 @@ PipePair = Class{}
 
 -- size of the gap between pipes
 -- Can be changed for different difficulties
-local GAP_HEIGHT = 60
+local GAP_HEIGHT = 90
 
 
 function PipePair:init(y)

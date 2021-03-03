@@ -1,7 +1,7 @@
 Bird = Class{}
 
 -- Multiples gravitys can be defined to set difficulty levels
-local GRAVITY = 10
+local GRAVITY = 9.5
 local BIRD_WITDH = 34
 local BIRD_HEIGHT = 24
 local birdImage
