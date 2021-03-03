@@ -44,7 +44,9 @@ local spawnTimer = 0
 local lastY = -PIPE_HEIGHT + math.random(80) + 20
 
 -- Variable that changes when the bird collides with a pipe
-local aliveBird = true
+--local aliveBird = true
+
+gameState = 'start'
 
 function love.load(arg)
     love.graphics.setDefaultFilter('nearest', 'nearest')
@@ -83,20 +85,39 @@ function love.keypressed(key)
     love.keyboard.keysPressed[key] =  true
     -- escape
     if key == 'escape' then
-        love.event.quit()
-    end
 
+        love.event.quit()
+
+    -- Change states when the return key is pressed
+    elseif key == 'enter' or key == 'return' then
+
+    	if gameState == 'start' then
+    		gameState = 'play'    	
+
+    	elseif gameState == 'gameOver' then
+    		gameState = 'leaderboard'
+    	
+    	elseif gameState == 'leaderboard' then
+    		gameState = 'start'
+    	
+    end
 end
 
 
 function love.update(dt)
-    if aliveBird then
+    --if aliveBird then
+    if gameState == 'start' or gameState == 'play' then
+
         -- Scroll background
         backgroundScroll = (backgroundScroll + BACKGROUND_SCROLL_SPEED * dt)
             % BACKGROUND_LOOPING_POINT
         -- Scroll ground
         groundScroll = (groundScroll + GROUND_SCROLL_SPEED * dt)
             % GROUND_LOOPING_POINT
+    end
+
+    -- Avoided using elseif, given that it wouldn't trigger until after the play stage.
+    if gameState == 'play' then
 
         -- Update of spawnTimer
         spawnTimer = spawnTimer + dt
@@ -128,7 +149,8 @@ function love.update(dt)
             --checks collision
             for i, pipe in pairs(pair.pipes) do
                 if bird:collides(pipe) then
-                    aliveBird = false
+                    --aliveBird = false
+                    gameState = 'gameOver'
                 end
             end
             
