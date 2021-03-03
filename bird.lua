@@ -1,7 +1,7 @@
 Bird = Class{}
 
 -- Multiples gravitys can be defined to set difficulty levels
-local GRAVITY = 12
+local GRAVITY = 10
 
 function Bird:init()
     -- Load image
@@ -27,7 +27,7 @@ function Bird:update(dt)
     
     -- Defines how high the bird will jump
     if love.keyboard.wasPressed('space') then
-        self.dy = -3
+        self.dy = -2.5
     end
 
     -- Changes the posotion of the bird
