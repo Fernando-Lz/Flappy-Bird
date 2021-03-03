@@ -33,6 +33,8 @@ function PipePair:init(y)
 
     -- whether this pipe pair is ready to be removed from the scene
     self.remove = false
+
+    self.checked = false
 end
 
 function PipePair:update(dt)
