@@ -12,6 +12,8 @@ local currentFrame = 1
 local desiredDelay = 0.3
 local timePassedSinceLastFrame = 0
 
+local flap = love.audio.newSource('/assets/audio/flap.wav', 'stream')
+
 function Bird:init()
     math.randomseed(os.time())
     -- Load sprite animation
@@ -76,6 +78,7 @@ function Bird:update(dt)
     -- Defines how high the bird will jump
     if love.keyboard.wasPressed('space') then
         self.dy = -2.5
+        love.audio.play(flap)
     end
 
     -- Changes the posotion of the bird

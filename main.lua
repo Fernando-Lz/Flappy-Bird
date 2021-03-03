@@ -46,6 +46,7 @@ local score = 0
 local bestScore = 0
 
 local point = love.audio.newSource('/assets/audio/point.wav', 'stream')
+
 -- Variable that changes when the bird collides with a pipe
 --local aliveBird = true
 
