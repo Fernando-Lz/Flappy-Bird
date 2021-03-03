@@ -14,6 +14,7 @@ WINDOW_HEIGHT = 720
 
 VIRTUAL_WIDTH = 534
 VIRTUAL_HEIGHT =  300
+GROUND_HEIGHT = VIRTUAL_HEIGHT - 45
 
 --background and ground images
 local background = love.graphics.newImage('/assets/background.png')
@@ -46,7 +47,8 @@ local score = 0
 local bestScore = 0
 
 local point = love.audio.newSource('/assets/audio/point.wav', 'stream')
-
+local hit = love.audio.newSource('/assets/audio/hit.wav', 'stream')
+local death = love.audio.newSource('/assets/audio/die.wav', 'stream')
 -- Variable that changes when the bird collides with a pipe
 --local aliveBird = true
 
@@ -150,8 +152,10 @@ function love.update(dt)
         bird:update(dt)
         
         -- Ground collision
-        if bird.y >= VIRTUAL_HEIGHT - 45 then
+        if bird.y >= GROUND_HEIGHT then
             --aliveBird = false
+            love.audio.play(hit)
+            love.audio.play(death)
             gameState = 'gameOver'
         end
         
@@ -178,6 +182,8 @@ function love.update(dt)
                     	bestScore = score
                     end
 
+                    love.audio.play(hit)
+                    love.audio.play(death)
                     gameState = 'gameOver'
                 end
             end
@@ -195,6 +201,20 @@ function love.update(dt)
             end
         end
 
+    -- 
+    elseif gameState == 'gameOver' then
+    	
+    	GRAVITY = 100
+    	bird.y =  bird.y + GRAVITY * dt
+
+    	--GROUND_HEIGHT = VIRTUAL_HEIGHT - 45
+    	--[[pipe = Pipe()
+
+    	if bird:collides(pipe) and bird.y >= pipe.height then
+    		bird.y = pipe.height
+    	else]]if bird.y >= GROUND_HEIGHT then
+            bird.y = GROUND_HEIGHT
+        end
     end
     love.keyboard.keysPressed = {}
 end
@@ -225,7 +245,13 @@ function love.draw()
 
         -- Draw ground
 	    love.graphics.draw(ground, -groundScroll-1, VIRTUAL_HEIGHT - 20)
-	end        
+	end
+
+	if gameState == 'gameOver' then
+
+		--love.graphics.rotate(math.pi/2)
+		bird:render()
+	end     
 
     push:finish()
 end
