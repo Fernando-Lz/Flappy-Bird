@@ -85,13 +85,13 @@ function love.keypressed(key)
     love.keyboard.keysPressed[key] =  true
     -- escape
     if key == 'escape' then
-        
+
         love.event.quit()
 
     -- Change states when the return key is pressed
     elseif key == 'enter' or key == 'return' then
 
-    	if gameState == 'main' then
+    	if gameState == 'start' then
     		gameState = 'play'    	
 
     	elseif gameState == 'gameOver' then
@@ -100,19 +100,24 @@ function love.keypressed(key)
     	elseif gammeState == 'leaderboard' then
     		gameState = 'start'
     	
-
     end
 end
 
 
 function love.update(dt)
-    if aliveBird then
+    --if aliveBird then
+    if gameState == 'start' or gameState == 'play' then
+
         -- Scroll background
         backgroundScroll = (backgroundScroll + BACKGROUND_SCROLL_SPEED * dt)
             % BACKGROUND_LOOPING_POINT
         -- Scroll ground
         groundScroll = (groundScroll + GROUND_SCROLL_SPEED * dt)
             % GROUND_LOOPING_POINT
+    end
+
+    -- Avoided using elseif, given that it wouldn't trigger until after the play stage.
+    if gameState == 'play' then
 
         -- Update of spawnTimer
         spawnTimer = spawnTimer + dt
