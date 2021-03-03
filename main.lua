@@ -104,13 +104,17 @@ function love.keypressed(key)
     	if gameState == 'start' then
     		gameState = 'play'    	
 
-    	elseif gameState == 'gameOver' then
+    	elseif gameState == 'gameOver' then    		    	
+
     		gameState = 'leaderboard'
     	
-    	-- Respawn
+    	-- Respawn Bird
     	elseif gameState == 'leaderboard' then
 
     		bird:init()
+
+    		-- Reset score 
+            score = 0
 
     		for k in pairs(pipePairs) do
 			    pipePairs[k] = nil
@@ -187,6 +191,7 @@ function love.update(dt)
 
                     love.audio.play(hit)
                     love.audio.play(death)
+                    
                     gameState = 'gameOver'
                 end
             end
@@ -227,7 +232,7 @@ function love.draw()
     push:start()
     --Simulate a draw layer by setting an order in which objects will be drawn
     
-    if gameState == 'start' or gameState == 'play' or gameState == 'gameOver' then
+    if --[[gameState == 'start' or gameState == 'play' or gameState == 'gameOver']] gameState ~= 'leaderboard' then
 	    -- Draw background
 	    love.graphics.draw(background, -backgroundScroll, -200)
 	    
@@ -246,8 +251,7 @@ function love.draw()
         end
 	end
 
-	if gameState == 'play' or gameState == 'gameOver' then
-	    love.graphics.print(score, VIRTUAL_WIDTH/2, VIRTUAL_HEIGHT/4)
+	if gameState == 'play' or gameState == 'gameOver' then	    	
 
 	    -- Draw pipes
 	    for k, pair in pairs(pipePairs) do
@@ -256,12 +260,20 @@ function love.draw()
 
         -- Draw ground
 	    love.graphics.draw(ground, -groundScroll-1, VIRTUAL_HEIGHT - 20)
+
+	    -- Draw Bird front of the pipes
+	    bird:render()
+
+	    love.graphics.setColor(0,0,0,1)
+	    love.graphics.print(score, VIRTUAL_WIDTH/2, VIRTUAL_HEIGHT/4)
 	end
 
-	if gameState == 'gameOver' then
+	if gameState == 'leaderboard' then
 
-		love.graphics.rotate(math.pi/2)
-		bird:render()
+		--love.graphics.rotate(math.pi/2)
+		--bird:render()
+		love.graphics.print('Score: ' ..score, VIRTUAL_WIDTH/2, VIRTUAL_HEIGHT/4)
+		love.graphics.print('Highscore: ' ..bestScore, VIRTUAL_WIDTH/2, VIRTUAL_HEIGHT/4 + 45)
 	end     
 
     push:finish()
