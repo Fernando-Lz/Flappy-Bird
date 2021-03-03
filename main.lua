@@ -1,5 +1,4 @@
 -- TODO
--- #1 update bird images to create the motion of flutter (dt/3) por las tres fases de aleteo
 -- #2 be able to change bird color
 
 -- Assets obtained from https://github.com/samuelcust/flappy-bird-assets
@@ -92,14 +91,20 @@ function love.keypressed(key)
     elseif key == 'enter' or key == 'return' then
 
     	if gameState == 'start' then
-    		bird:init()
-    		spawnTimer = 0
     		gameState = 'play'    	
 
     	elseif gameState == 'gameOver' then
     		gameState = 'leaderboard'
     	
     	elseif gameState == 'leaderboard' then
+    		-- Bird's properties reset.
+    		bird:init()
+
+    		-- Pipes reset
+    		for k in pairs (pipePairs) do
+			    pipePairs[k] = nil
+			end
+
     		gameState = 'start'
     	end
     	
@@ -124,7 +129,6 @@ function love.update(dt)
 
         -- Update of spawnTimer
         spawnTimer = spawnTimer + dt
-
         -- How often a pipe is generated, is updated each two and half second
         if spawnTimer > 2 then
             --Can be changed for dificulties
@@ -142,7 +146,8 @@ function love.update(dt)
         
         -- Ground collision
         if bird.y >= VIRTUAL_HEIGHT - 45 then
-            aliveBird = false
+            --aliveBird = false
+            gameState = 'gameOver'
         end
         
         --  for each pipe pair
@@ -196,7 +201,7 @@ function love.draw()
 	        pair:render()
 	    end
 
-	    -- Draw ground
+        -- Draw ground
 	    love.graphics.draw(ground, -groundScroll-1, VIRTUAL_HEIGHT - 20)
 	end        
 
