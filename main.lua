@@ -225,7 +225,7 @@ function love.update(dt)
     end
 
     -- If reaches 999 points, the user wins
-    if score == 2 then
+    if score == 999 then
         gameState = 'leaderboard'
         birdWin = true
         love.audio.play(victory)
