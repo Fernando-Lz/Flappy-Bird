@@ -45,12 +45,12 @@ local lastY = -PIPE_HEIGHT + math.random(80) + 20
 
 score = 0
 local bestScore = 0
+local birdWin = false
 
 local point = love.audio.newSource('/assets/audio/point.wav', 'stream')
 local hit = love.audio.newSource('/assets/audio/hit.wav', 'stream')
 local death = love.audio.newSource('/assets/audio/die.wav', 'stream')
--- Variable that changes when the bird collides with a pipe
---local aliveBird = true
+local victory = love.audio.newSource('/assets/audio/victory.wav', 'stream')
 
 gameState = 'start'
 
@@ -61,7 +61,7 @@ function love.load(arg)
 
     --Fonts
     bigFont = love.graphics.newFont('/assets/Flappy-Bird.ttf', 56)
-    smallFont = love.graphics.newFont('/assets/Flappy-Bird.ttf', 34)
+    smallFont = love.graphics.newFont('/assets/Flappy-Bird.ttf', 40)
     math.randomseed(os.time())
 
     push:setupScreen(VIRTUAL_WIDTH, VIRTUAL_HEIGHT, WINDOW_WIDTH, WINDOW_HEIGHT, {
@@ -105,16 +105,15 @@ function love.keypressed(key)
     		gameState = 'play'    	
 
     	elseif gameState == 'gameOver' then    		    	
-
+            
     		gameState = 'leaderboard'
-    	
     	-- Respawn Bird
     	elseif gameState == 'leaderboard' then
 
     		bird:init()
-
     		-- Reset score 
             score = 0
+            birdWin = false
 
     		for k in pairs(pipePairs) do
 			    pipePairs[k] = nil
@@ -224,6 +223,13 @@ function love.update(dt)
             bird.y = GROUND_HEIGHT
         end
     end
+
+    -- If reaches 999 points, the user wins
+    if score == 1 then
+        gameState = 'leaderboard'
+        birdWin = true
+        love.audio.play(victory)
+    end
     love.keyboard.keysPressed = {}
 end
 
@@ -242,7 +248,7 @@ function love.draw()
 	    -- Draw Bird
 	    bird:render()
         if gameState == 'start' then
-            love.graphics.setColor(0,0,0,1)
+            love.graphics.setColor(1,1,1,1)
             love.graphics.setFont(bigFont)
             love.graphics.printf('Flappy Bird', 0, 18, VIRTUAL_WIDTH, 'center')
             love.graphics.setFont(smallFont)
@@ -263,17 +269,23 @@ function love.draw()
 
 	    -- Draw Bird front of the pipes
 	    bird:render()
-
-	    love.graphics.setColor(0,0,0,1)
-	    love.graphics.print(score, VIRTUAL_WIDTH/2, VIRTUAL_HEIGHT/4)
+        love.graphics.setFont(smallFont)
+	    love.graphics.setColor(1,1,1,0.8)
+	    love.graphics.printf(score, 0, 20, VIRTUAL_WIDTH, 'center')
 	end
 
 	if gameState == 'leaderboard' then
 
+        if birdWin then
+            love.graphics.setColor(1,1,1,1)
+            love.graphics.setFont(bigFont)
+            love.graphics.printf('Congratulations. You Won!', 0, VIRTUAL_HEIGHT/2 - 20, VIRTUAL_WIDTH, 'center')
+        else
 		--love.graphics.rotate(math.pi/2)
 		--bird:render()
-		love.graphics.print('Score: ' ..score, VIRTUAL_WIDTH/2, VIRTUAL_HEIGHT/4)
-		love.graphics.print('Highscore: ' ..bestScore, VIRTUAL_WIDTH/2, VIRTUAL_HEIGHT/4 + 45)
+		    love.graphics.print('Score: ' ..score, VIRTUAL_WIDTH/2, VIRTUAL_HEIGHT/4)
+		    love.graphics.print('Highscore: ' ..bestScore, VIRTUAL_WIDTH/2, VIRTUAL_HEIGHT/4 + 45)
+        end
 	end     
 
     push:finish()
