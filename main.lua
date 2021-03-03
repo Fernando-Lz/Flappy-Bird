@@ -99,6 +99,7 @@ function love.keypressed(key)
     	
     	elseif gameState == 'leaderboard' then
     		gameState = 'start'
+    	end
     	
     end
 end
@@ -166,6 +167,7 @@ function love.update(dt)
                 table.remove(pipePairs, k)
             end
         end
+
     end
     love.keyboard.keysPressed = {}
 end
@@ -174,16 +176,24 @@ end
 function love.draw()
     push:start()
     --Simulate a draw layer by setting an order in which objects will be drawn
-    -- Draw background
-    love.graphics.draw(background, -backgroundScroll, -200)
-    -- Draw pipes
-    for k, pair in pairs(pipePairs) do
-        pair:render()
-    end
-    -- Draw ground
-    love.graphics.draw(ground, -groundScroll-1, VIRTUAL_HEIGHT - 20)
-    -- Draw Bird 
-    bird:render()
-        
+    
+    if gameState == 'start' or gameState == 'play' or gameState == 'gameOver' then
+	    -- Draw background
+	    love.graphics.draw(background, -backgroundScroll, -200)
+	    
+	    -- Draw ground
+	    love.graphics.draw(ground, -groundScroll-1, VIRTUAL_HEIGHT - 20)
+
+	    -- Draw Bird
+	    bird:render(dt)
+	end
+
+	if gameState == 'play' or gameState == 'gameOver' then
+	    -- Draw pipes
+	    for k, pair in pairs(pipePairs) do
+	        pair:render()
+	    end
+	end        
+
     push:finish()
 end
