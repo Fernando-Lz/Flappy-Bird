@@ -107,7 +107,15 @@ function love.keypressed(key)
     	elseif gameState == 'gameOver' then
     		gameState = 'leaderboard'
     	
+    	-- Respawn
     	elseif gameState == 'leaderboard' then
+
+    		bird:init()
+
+    		for k in pairs(pipePairs) do
+			    pipePairs[k] = nil
+			end
+
             gameState = 'start'
     	end
     	
@@ -253,7 +261,7 @@ function love.draw()
 	if gameState == 'gameOver' then
 
 		--love.graphics.rotate(math.pi/2)
-		bird:render()
+		--bird:render()
 	end     
 
     push:finish()
