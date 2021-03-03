@@ -8,7 +8,7 @@ Class = require "class"
 require 'Bird'
 require 'Pipe'
 require 'PipePair'
-
+local saveData = require("saveData")
 WINDOW_WIDTH = 1280
 WINDOW_HEIGHT = 720
 
@@ -55,9 +55,13 @@ local death = love.audio.newSource('/assets/audio/die.wav', 'stream')
 gameState = 'start'
 
 function love.load(arg)
+    --saveData.save(t, "test.txt")
     love.graphics.setDefaultFilter('nearest', 'nearest')
     love.window.setTitle("Flappy Bird!")
 
+    --Fonts
+    bigFont = love.graphics.newFont('/assets/Flappy-Bird.ttf', 56)
+    smallFont = love.graphics.newFont('/assets/Flappy-Bird.ttf', 34)
     math.randomseed(os.time())
 
     push:setupScreen(VIRTUAL_WIDTH, VIRTUAL_HEIGHT, WINDOW_WIDTH, WINDOW_HEIGHT, {
@@ -104,6 +108,7 @@ function love.keypressed(key)
     		gameState = 'leaderboard'
     	
     	elseif gameState == 'leaderboard' then
+            gameState = 'start'
     	end
     	
     end
@@ -112,14 +117,14 @@ end
 
 function love.update(dt)
     --if aliveBird then
-
+    if gameState == 'start' or gameState == 'play' then
         -- Scroll background
         backgroundScroll = (backgroundScroll + BACKGROUND_SCROLL_SPEED * dt)
             % BACKGROUND_LOOPING_POINT
         -- Scroll ground
         groundScroll = (groundScroll + GROUND_SCROLL_SPEED * dt)
             % GROUND_LOOPING_POINT
-    --end
+    end
 
     -- Avoided using elseif, given that it wouldn't trigger until after the play stage.
     if gameState == 'play' then
@@ -222,7 +227,15 @@ function love.draw()
 	    love.graphics.draw(ground, -groundScroll-1, VIRTUAL_HEIGHT - 20)
 
 	    -- Draw Bird
-	    bird:render(dt)
+	    bird:render()
+        if gameState == 'start' then
+            love.graphics.setColor(0,0,0,1)
+            love.graphics.setFont(bigFont)
+            love.graphics.printf('Flappy Bird', 0, 18, VIRTUAL_WIDTH, 'center')
+            love.graphics.setFont(smallFont)
+            love.graphics.printf('Press enter to Start', 0, 60, VIRTUAL_WIDTH, 'center')
+
+        end
 	end
 
 	if gameState == 'play' or gameState == 'gameOver' then
