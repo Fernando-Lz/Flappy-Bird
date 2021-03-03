@@ -225,10 +225,11 @@ function love.update(dt)
     end
 
     -- If reaches 999 points, the user wins
-    if score == 1 then
+    if score == 2 then
         gameState = 'leaderboard'
         birdWin = true
         love.audio.play(victory)
+        bestScore = score
     end
     love.keyboard.keysPressed = {}
 end
