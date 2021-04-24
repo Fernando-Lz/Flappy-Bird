@@ -1,6 +1,6 @@
 # Flappy-Bird
 Videogames-Lab project intended to recreate Flappy Bird with the Love2D game engine. 
-Developed by @Fernando-Lopez-Lopez and Alexander Díaz Ruiz (@CrunchyBytes).
+Developed by Fernando López López (@LeStringent) and Alexander Díaz Ruiz (@CrunchyBytes).
 
 Aside from audio and visual assets, the project consists of 6 Lua files, which are documented for legibility:
 - **push:** Virtual resolution handling library, responsible for the game window displayed.
